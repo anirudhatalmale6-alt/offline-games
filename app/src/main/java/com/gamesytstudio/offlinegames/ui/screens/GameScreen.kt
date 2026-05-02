@@ -2,8 +2,11 @@ package com.gamesytstudio.offlinegames.ui.screens
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -25,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.webkit.WebViewAssetLoader
 import com.gamesytstudio.offlinegames.data.GameRepository
 import com.gamesytstudio.offlinegames.ui.theme.*
 
@@ -37,7 +41,6 @@ fun GameScreen(
     val game = remember { GameRepository.getGameById(gameId) }
     val context = LocalContext.current
 
-    // For Cocos2d-x games, launch the native activity
     if (game?.engine == "cocos2dx") {
         LaunchedEffect(gameId) {
             val intent = Intent(context, CocoGameActivity::class.java)
@@ -65,7 +68,6 @@ fun GameScreen(
             .background(BackgroundDark)
             .statusBarsPadding()
     ) {
-        // Header bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,12 +92,15 @@ fun GameScreen(
             )
         }
 
-        // WebView
         Box(modifier = Modifier.fillMaxSize()) {
             if (game != null) {
                 AndroidView(
-                    factory = { context ->
-                        WebView(context).apply {
+                    factory = { ctx ->
+                        val assetLoader = WebViewAssetLoader.Builder()
+                            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(ctx))
+                            .build()
+
+                        WebView(ctx).apply {
                             layoutParams = ViewGroup.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -113,6 +118,13 @@ fun GameScreen(
                                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                             }
                             webViewClient = object : WebViewClient() {
+                                override fun shouldInterceptRequest(
+                                    view: WebView?,
+                                    request: WebResourceRequest?
+                                ): WebResourceResponse? {
+                                    return request?.let { assetLoader.shouldInterceptRequest(it.url) }
+                                }
+
                                 override fun onPageFinished(view: WebView?, url: String?) {
                                     isLoading = false
                                 }
