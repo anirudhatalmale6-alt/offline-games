@@ -1,6 +1,14 @@
 *.keystore
+*.apk
 local.properties
 build/
 .gradle/
 app/build/
 app/src/main/assets/games/
+app/src/main/assets/cocos-games/
+app/src/main/assets/main.js
+app/src/main/assets/project.json
+app/src/main/assets/src/
+app/src/main/assets/jsb-adapter/
+app/src/main/jniLibs/
+app/libs/*.jar

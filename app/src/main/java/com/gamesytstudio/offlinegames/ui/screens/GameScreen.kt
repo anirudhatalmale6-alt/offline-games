@@ -1,6 +1,7 @@
 package com.gamesytstudio.offlinegames.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,18 @@ fun GameScreen(
     onBackClick: () -> Unit
 ) {
     val game = remember { GameRepository.getGameById(gameId) }
+    val context = LocalContext.current
+
+    // For Cocos2d-x games, launch the native activity
+    if (game?.engine == "cocos2dx") {
+        LaunchedEffect(gameId) {
+            val intent = Intent(context, CocoGameActivity::class.java)
+            context.startActivity(intent)
+            onBackClick()
+        }
+        return
+    }
+
     var isLoading by remember { mutableStateOf(true) }
     var webView by remember { mutableStateOf<WebView?>(null) }
 
