@@ -246,7 +246,7 @@ object GameRepository {
                     .split(" ")
                     .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } },
                 category = categoryMap[folder] ?: "Casual",
-                assetPath = "https://appassets.androidplatform.net/assets/games/$folder/index.html",
+                assetPath = "file:///android_asset/games/$folder/index.html",
                 icon = "file:///android_asset/games/$folder/icon.png"
             )
         }.sortedBy { it.name }

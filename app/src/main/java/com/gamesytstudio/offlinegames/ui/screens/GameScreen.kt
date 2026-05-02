@@ -2,9 +2,8 @@ package com.gamesytstudio.offlinegames.ui.screens
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.JsResult
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -20,13 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.webkit.WebViewAssetLoader
 import com.gamesytstudio.offlinegames.data.GameRepository
 import com.gamesytstudio.offlinegames.ui.theme.*
 
@@ -84,10 +81,6 @@ fun GameScreen(
             if (game != null) {
                 AndroidView(
                     factory = { ctx ->
-                        val assetLoader = WebViewAssetLoader.Builder()
-                            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(ctx))
-                            .build()
-
                         WebView(ctx).apply {
                             layoutParams = ViewGroup.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -99,25 +92,36 @@ fun GameScreen(
                                 domStorageEnabled = true
                                 allowFileAccess = true
                                 allowContentAccess = true
+                                @Suppress("DEPRECATION")
+                                allowUniversalAccessFromFileURLs = true
+                                @Suppress("DEPRECATION")
+                                allowFileAccessFromFileURLs = true
                                 mediaPlaybackRequiresUserGesture = false
                                 useWideViewPort = true
                                 loadWithOverviewMode = true
                                 cacheMode = WebSettings.LOAD_DEFAULT
                                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                                databaseEnabled = true
                             }
                             webViewClient = object : WebViewClient() {
-                                override fun shouldInterceptRequest(
-                                    view: WebView?,
-                                    request: WebResourceRequest?
-                                ): WebResourceResponse? {
-                                    return request?.let { assetLoader.shouldInterceptRequest(it.url) }
-                                }
-
                                 override fun onPageFinished(view: WebView?, url: String?) {
                                     isLoading = false
                                 }
                             }
-                            webChromeClient = WebChromeClient()
+                            webChromeClient = object : WebChromeClient() {
+                                override fun onJsAlert(
+                                    view: WebView?,
+                                    url: String?,
+                                    message: String?,
+                                    result: JsResult?
+                                ): Boolean {
+                                    if (message?.contains("Web exports won't work") == true) {
+                                        result?.confirm()
+                                        return true
+                                    }
+                                    return super.onJsAlert(view, url, message, result)
+                                }
+                            }
                             loadUrl(game.assetPath)
                             webView = this
                         }
