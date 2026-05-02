@@ -11,27 +11,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.gamesytstudio.offlinegames.model.Game
 import com.gamesytstudio.offlinegames.ui.theme.BorderDark
 import com.gamesytstudio.offlinegames.ui.theme.SurfaceDark
 import com.gamesytstudio.offlinegames.ui.theme.TextPrimary
 import com.gamesytstudio.offlinegames.ui.theme.TextSecondary
 
-// Category color mapping
 object CategoryColors {
     private val colors = mapOf(
         "Puzzle" to Color(0xFF4FC3F7),
@@ -54,13 +53,12 @@ fun GameCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categoryColor = CategoryColors.getColor(game.category)
     val cardShape = RoundedCornerShape(16.dp)
 
     Column(
         modifier = modifier
             .width(120.dp)
-            .height(140.dp)
+            .height(150.dp)
             .clip(cardShape)
             .background(SurfaceDark)
             .border(
@@ -73,41 +71,31 @@ fun GameCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Icon circle with gradient
         Box(
             modifier = Modifier
-                .size(52.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            categoryColor,
-                            categoryColor.copy(alpha = 0.6f)
-                        )
-                    )
-                ),
+                .size(72.dp)
+                .clip(RoundedCornerShape(14.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = game.name.first().uppercase(),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+            AsyncImage(
+                model = game.icon,
+                contentDescription = game.name,
+                modifier = Modifier.size(72.dp).clip(RoundedCornerShape(14.dp)),
+                contentScale = ContentScale.Crop
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Game name
         Text(
             text = game.name,
-            fontSize = 12.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.Medium,
             color = TextPrimary,
             textAlign = TextAlign.Center,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            lineHeight = 14.sp
+            lineHeight = 13.sp
         )
     }
 }
@@ -118,7 +106,6 @@ fun GameCardGrid(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categoryColor = CategoryColors.getColor(game.category)
     val cardShape = RoundedCornerShape(16.dp)
 
     Column(
@@ -135,32 +122,22 @@ fun GameCardGrid(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Icon circle with gradient
         Box(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            categoryColor,
-                            categoryColor.copy(alpha = 0.6f)
-                        )
-                    )
-                ),
+                .size(64.dp)
+                .clip(RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = game.name.first().uppercase(),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+            AsyncImage(
+                model = game.icon,
+                contentDescription = game.name,
+                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Game name
         Text(
             text = game.name,
             fontSize = 12.sp,
@@ -172,7 +149,6 @@ fun GameCardGrid(
             lineHeight = 14.sp
         )
 
-        // Category label
         Text(
             text = game.category,
             fontSize = 10.sp,
