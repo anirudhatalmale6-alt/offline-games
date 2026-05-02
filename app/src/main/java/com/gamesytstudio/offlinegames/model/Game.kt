@@ -5,6 +5,5 @@ data class Game(
     val name: String,
     val category: String,
     val assetPath: String,
-    val icon: String = "",
-    val engine: String = "html5" // "html5" or "cocos2dx"
+    val icon: String = ""
 )

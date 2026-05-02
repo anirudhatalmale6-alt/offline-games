@@ -24,13 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.screens.CocoGameActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|uiMode"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-
     </application>
 
 </manifest>

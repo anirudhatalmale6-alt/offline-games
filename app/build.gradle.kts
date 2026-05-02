@@ -88,9 +88,6 @@ dependencies {
     // WebView
     implementation("androidx.webkit:webkit:1.12.1")
 
-    // Cocos2d-x engine (extracted from relax games APK)
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
     // Debug
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

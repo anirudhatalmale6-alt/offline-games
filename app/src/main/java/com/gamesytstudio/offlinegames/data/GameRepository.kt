@@ -236,40 +236,10 @@ object GameRepository {
         "wordly", "word_search_hidden_2", "zombie_tower_defence", "zumba"
     )
 
-    private val cocosGames = listOf(
-        Game("cocos_bite_game", "Bite Game", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_brain_hole", "Brain Hole Puzzle", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_connect_puzzle", "Connect Puzzle", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_crack_screen", "Crack Screen", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_drive_train", "Drive Train", "Arcade", "", engine = "cocos2dx"),
-        Game("cocos_find_toilet", "Find the Toilet", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_finger_board", "Finger Board", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_flip_card", "Flip Card", "Card", "", engine = "cocos2dx"),
-        Game("cocos_fruit_synthesis", "Fruit Synthesis", "Merge", "", engine = "cocos2dx"),
-        Game("cocos_gobang", "Gobang", "Strategy", "", engine = "cocos2dx"),
-        Game("cocos_hydraulic_press", "Hydraulic Press", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_line_drawing", "Line Drawing", "Creative", "", engine = "cocos2dx"),
-        Game("cocos_line_park", "Line Park", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_new_russian_box", "New Russian Box", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_parking_expert", "Parking Expert", "Strategy", "", engine = "cocos2dx"),
-        Game("cocos_petal", "Petal", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_pinball", "Pinball", "Arcade", "", engine = "cocos2dx"),
-        Game("cocos_russian_box", "Russian Box", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_save_stickman", "Save Stickman", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_save_those_cats", "Save Those Cats", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_shoot_game", "Shoot Game", "Arcade", "", engine = "cocos2dx"),
-        Game("cocos_slice_it_up", "Slice It Up", "Casual", "", engine = "cocos2dx"),
-        Game("cocos_speedy_kitty", "Speedy Kitty", "Arcade", "", engine = "cocos2dx"),
-        Game("cocos_table_tennis", "Table Tennis", "Arcade", "", engine = "cocos2dx"),
-        Game("cocos_thief", "Thief", "Strategy", "", engine = "cocos2dx"),
-        Game("cocos_water_sort", "Water Sort Puzzle", "Puzzle", "", engine = "cocos2dx"),
-        Game("cocos_cup_line", "Cup Line", "Casual", "", engine = "cocos2dx")
-    )
-
     val categories = listOf("All", "Puzzle", "Arcade", "Casual", "Merge", "Card", "Creative", "Strategy")
 
     fun getAllGames(): List<Game> {
-        val html5Games = allGameFolders.map { folder ->
+        return allGameFolders.map { folder ->
             Game(
                 id = folder,
                 name = displayNames[folder] ?: folder.replace("_", " ")
@@ -277,11 +247,9 @@ object GameRepository {
                     .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } },
                 category = categoryMap[folder] ?: "Casual",
                 assetPath = "https://appassets.androidplatform.net/assets/games/$folder/index.html",
-                icon = "file:///android_asset/games/$folder/icon.png",
-                engine = "html5"
+                icon = "file:///android_asset/games/$folder/icon.png"
             )
-        }
-        return (html5Games + cocosGames).sortedBy { it.name }
+        }.sortedBy { it.name }
     }
 
     fun getGamesByCategory(category: String): List<Game> {
@@ -301,7 +269,7 @@ object GameRepository {
         }
     }
 
-    fun getGameCount(): Int = allGameFolders.size + cocosGames.size
+    fun getGameCount(): Int = allGameFolders.size
 
     fun getCategoryCount(category: String): Int {
         if (category == "All") return getGameCount()

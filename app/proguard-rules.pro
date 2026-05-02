@@ -7,9 +7,3 @@
 
 # Keep Compose classes
 -dontwarn androidx.compose.**
-
-# Cocos2d-x engine
--keep class org.cocos2dx.** { *; }
--dontwarn org.cocos2dx.**
--dontwarn com.android.vending.**
--dontwarn com.google.android.vending.**

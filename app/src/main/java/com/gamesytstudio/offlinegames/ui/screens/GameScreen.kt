@@ -1,8 +1,6 @@
 package com.gamesytstudio.offlinegames.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
@@ -39,16 +37,6 @@ fun GameScreen(
     onBackClick: () -> Unit
 ) {
     val game = remember { GameRepository.getGameById(gameId) }
-    val context = LocalContext.current
-
-    if (game?.engine == "cocos2dx") {
-        LaunchedEffect(gameId) {
-            val intent = Intent(context, CocoGameActivity::class.java)
-            context.startActivity(intent)
-            onBackClick()
-        }
-        return
-    }
 
     var isLoading by remember { mutableStateOf(true) }
     var webView by remember { mutableStateOf<WebView?>(null) }
